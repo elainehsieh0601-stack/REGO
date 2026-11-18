@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REGO | 智慧載具</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f4f0;
+  color: #20251f;
+}
+header {
+  background: #263b32;
+  color: white;
+  padding: 28px 22px;
+}
+.logo { font-size: 30px; font-weight: bold; letter-spacing: 4px; }
+header p { color: #d2ddd3; }
+main { padding: 22px; max-width: 600px; margin: auto; }
+h2 { font-size: 21px; }
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  margin: 15px 0;
+}
+.vehicle {
+  font-size: 35px;
+  margin-bottom: 10px;
+}
+button {
+  background: #263b32;
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+#location { margin-top: 14px; line-height: 1.7; }
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #777;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">REGO.</div>
+  <p>智慧移動・自由生活</p>
+</header>
+
+<main>
+  <h2>探索 REGO 載具</h2>
+  <p>選擇適合自己的移動方式。</p>
+
+  <div class="card">
+    <div class="vehicle">🛒</div>
+    <h3>購物載具</h3>
+    <p>讓日常購物更加便利。</p>
+  </div>
+
+  <div class="card">
+    <div class="vehicle">🚲</div>
+    <h3>休閒載具</h3>
+    <p>探索更多移動可能。</p>
+  </div>
+
+  <div class="card">
+    <div class="vehicle">♿</div>
+    <h3>輔助載具</h3>
+    <p>提供更便利的移動體驗。</p>
+  </div>
+
+  <div class="card">
+    <h2>我的位置</h2>
+    <p>開啟定位，查看目前所在位置。</p>
+    <button onclick="getLocation()">取得目前位置</button>
+    <div id="location"></div>
+  </div>
+</main>
+
+<footer>REGO © 2026</footer>
+
+<script>
+function getLocation() {
+  const output = document.getElementById("location");
+
+  if (!navigator.geolocation) {
+    output.textContent = "此裝置不支援定位功能";
+    return;
+  }
+
+  output.textContent = "正在取得位置...";
+
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      output.innerHTML =
+        "定位成功！<br>" +
+        "緯度：" + lat.toFixed(5) + "<br>" +
+        "經度：" + lon.toFixed(5) +
+        '<br><a target="_blank" href="https://www.google.com/maps?q=' +
+        lat + ',' + lon + '">在 Google 地圖查看</a>';
+    },
+    function() {
+      output.textContent = "無法取得位置，請確認定位權限。";
+    }
+  );
+}
+</script>
+
+</body>
+</html>
