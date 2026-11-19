@@ -4,123 +4,170 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>REGO | 智慧載具</title>
+<title>REGO | One Frame. Eight Forms.</title>
 <style>
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f3f4f0;
-  color: #20251f;
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,"Noto Sans TC",sans-serif;background:#f7f8f6;color:#20323b}
+header{height:85px;padding:15px 7%;display:flex;align-items:center;justify-content:space-between;background:#fff}
+.logo img{width:105px;height:auto;display:block}
+nav{display:flex;gap:30px}
+nav a{color:#263b43;text-decoration:none;font-size:14px}
+.hero{min-height:570px;padding:90px 9%;background:#203b43;color:white;display:flex;align-items:center;justify-content:space-between;gap:30px;overflow:hidden}
+.hero h1{font-size:clamp(48px,8vw,100px);margin:0;letter-spacing:-4px}
+.hero h2{font-size:22px;font-weight:400;color:#f2a72d}
+.hero p{line-height:2;color:#d5e3e5}
+.hero img{width:min(38%,360px);background:#fff;border-radius:5px}
+.btn{display:inline-block;padding:14px 25px;background:#efa629;color:#203b43;text-decoration:none;border-radius:30px;font-weight:bold;border:0;cursor:pointer}
+section{padding:85px 9%}
+.eyebrow{color:#d68c17;letter-spacing:3px;font-size:12px;font-weight:bold}
+h2{font-size:34px;margin:12px 0}
+.intro{color:#748087;line-height:1.9}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:35px}
+.card{background:white;border-radius:12px;padding:25px;min-height:180px;border:1px solid #e7e9e6;cursor:pointer;transition:.2s}
+.card:hover,.card.active{border:2px solid #e8a52c;transform:translateY(-4px)}
+.number{font-size:12px;color:#d68c17;letter-spacing:2px}
+.symbol{font-size:35px;margin:15px 0}
+.card h3{margin:8px 0}
+.card p{font-size:13px;color:#78848a}
+.detail{background:#eaf0ef;border-radius:15px;padding:35px;margin-top:25px}
+.detail h3{font-size:25px}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.feature{background:white;padding:25px;border-radius:12px}
+.feature span{font-size:30px}
+.transform{background:#203b43;color:white}
+.transform .intro{color:#c5d3d5}
+.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:35px}
+.step{border:1px solid #52666b;padding:25px;border-radius:12px}
+.step b{color:#f0aa32;font-size:26px}
+footer{padding:35px;text-align:center;background:#172d34;color:#cbd7d7;font-size:13px}
+@media(max-width:800px){
+.grid{grid-template-columns:repeat(2,1fr)}
+.feature-grid{grid-template-columns:repeat(2,1fr)}
+.hero{flex-direction:column;align-items:flex-start;padding:65px 7%}
+.hero img{width:220px}
+nav{gap:12px}
+nav a{font-size:12px}
+section{padding:60px 7%}
 }
-header {
-  background: #263b32;
-  color: white;
-  padding: 28px 22px;
-}
-
-header p { color: #d2ddd3; }
-main { padding: 22px; max-width: 600px; margin: auto; }
-h2 { font-size: 21px; }
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 16px;
-  margin: 15px 0;
-}
-.vehicle {
-  font-size: 35px;
-  margin-bottom: 10px;
-}
-button {
-  background: #263b32;
-  color: white;
-  border: none;
-  padding: 14px 20px;
-  border-radius: 10px;
-  font-size: 15px;
-  cursor: pointer;
-}
-#location { margin-top: 14px; line-height: 1.7; }
-footer {
-  text-align: center;
-  padding: 25px;
-  color: #777;
+@media(max-width:480px){
+header{padding:12px 5%}
+.logo img{width:75px}
+nav{gap:9px}
+nav a{font-size:11px}
+.grid{grid-template-columns:repeat(2,1fr);gap:10px}
+.card{padding:15px}
+.feature-grid,.steps{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
 <header>
- <header>
-  <div class="logo">
-    <img src="rego-logo.jpg" alt="REGO Logo"
-         style="width:150px; height:auto; display:block;">
-  </div>
-  <p>智慧移動・自由生活</p>
+<div class="logo">
+<img src="rego-logo.jpg" alt="REGO Logo">
+</div>
+<nav>
+<a href="#vehicles">載具</a>
+<a href="#transform">轉換系統</a>
+<a href="#features">智慧功能</a>
+</nav>
 </header>
-</header>
 
-<main>
-  <h2>探索 REGO 載具</h2>
-  <p>選擇適合自己的移動方式。</p>
+<div class="hero">
+<div>
+<div class="eyebrow">RETHINK MOBILITY</div>
+<h1>REGO.</h1>
+<h2>ONE FRAME. EIGHT FORMS.</h2>
+<p>一個骨架，八種移動可能。<br>
+透過結構調整與零件更換，陪伴不同年齡階段的生活。</p>
+<a href="#vehicles" class="btn">探索八種載具 ↗</a>
+</div>
+<img src="rego-logo.jpg" alt="REGO品牌標誌">
+</div>
 
-  <div class="card">
-    <div class="vehicle">🛒</div>
-    <h3>購物載具</h3>
-    <p>讓日常購物更加便利。</p>
-  </div>
+<section id="vehicles">
+<div class="eyebrow">OUR COLLECTION</div>
+<h2>探索 REGO 載具</h2>
+<p class="intro">選擇你的載具，了解不同階段的移動方式與專屬功能。</p>
 
-  <div class="card">
-    <div class="vehicle">🚲</div>
-    <h3>休閒載具</h3>
-    <p>探索更多移動可能。</p>
-  </div>
+<div class="grid" id="vehicleGrid"></div>
 
-  <div class="card">
-    <div class="vehicle">♿</div>
-    <h3>輔助載具</h3>
-    <p>提供更便利的移動體驗。</p>
-  </div>
+<div class="detail" id="vehicleDetail">
+<div class="eyebrow">SELECT YOUR VEHICLE</div>
+<h3>請選擇一種載具</h3>
+<p>點擊上方產品卡片，查看載具介紹與專屬功能。</p>
+</div>
+</section>
 
-  <div class="card">
-    <h2>我的位置</h2>
-    <p>開啟定位，查看目前所在位置。</p>
-    <button onclick="getLocation()">取得目前位置</button>
-    <div id="location"></div>
-  </div>
-</main>
+<section class="transform" id="transform">
+<div class="eyebrow">MODULAR TRANSFORMATION</div>
+<h2>一個骨架，八種可能</h2>
+<p class="intro">REGO 透過調整主體骨架角度，並更換部分功能零件，轉換成不同使用型態。</p>
+<div class="steps">
+<div class="step">
+<b>01</b>
+<h3>骨架角度調整</h3>
+<p>依照不同載具需求，調整主要結構的角度與配置。</p>
+</div>
+<div class="step">
+<b>02</b>
+<h3>模組零件更換</h3>
+<p>更換不同的座椅、輪組及配件，形成不同載具。</p>
+</div>
+</div>
+</section>
 
-<footer>REGO © 2026</footer>
+<section id="features">
+<div class="eyebrow">SMART EXPERIENCE</div>
+<h2>智慧生活功能</h2>
+<p class="intro">依照不同載具與使用年齡，提供適合的功能體驗。</p>
+<div class="feature-grid">
+<div class="feature"><span>♫</span><h3>音樂播放</h3><p>播放音樂，打造移動中的娛樂體驗。</p></div>
+<div class="feature"><span>🎮</span><h3>互動小遊戲</h3><p>提供適合不同年齡的互動遊戲。</p></div>
+<div class="feature"><span>⌖</span><h3>GPS 導航</h3><p>協助使用者規劃移動路線。</p></div>
+<div class="feature"><span>🎙</span><h3>語音播報</h3><p>透過語音提供資訊與提醒。</p></div>
+<div class="feature"><span>◷</span><h3>生活提醒</h3><p>協助記錄日常事項與重要提醒。</p></div>
+<div class="feature"><span>☷</span><h3>購物清單</h3><p>整理採買項目，讓日常生活更便利。</p></div>
+</div>
+</section>
+
+<footer>
+REGO © 2026 | ONE FRAME. EIGHT FORMS.
+</footer>
 
 <script>
-function getLocation() {
-  const output = document.getElementById("location");
+const vehicles=[
+{name:"尚未命名",icon:"✦",desc:"第一款載具，產品型態待定。",features:["產品介紹","功能規劃","造型展示"]},
+{name:"學步車",icon:"🚼",desc:"陪伴幼兒探索移動的樂趣。",features:["音樂播放","互動小遊戲","語音播報"]},
+{name:"搖搖馬",icon:"🐎",desc:"結合趣味與互動的乘坐體驗。",features:["音樂播放","互動小遊戲","故事播放"]},
+{name:"拖車",icon:"🛒",desc:"提供物品承載與移動的功能。",features:["生活提醒","語音播報","購物清單"]},
+{name:"腳踏車",icon:"🚲",desc:"享受自主騎乘與探索生活。",features:["GPS導航","音樂播放","路線資訊"]},
+{name:"滑板車",icon:"🛴",desc:"提供輕巧靈活的移動方式。",features:["GPS導航","音樂播放","路線資訊"]},
+{name:"買菜推車",icon:"🛍",desc:"協助日常採買與物品收納。",features:["購物清單","生活提醒","語音播報"]},
+{name:"助行器",icon:"🚶",desc:"提供日常移動時的輔助與便利。",features:["GPS導航","語音播報","生活提醒"]}
+];
 
-  if (!navigator.geolocation) {
-    output.textContent = "此裝置不支援定位功能";
-    return;
-  }
+const grid=document.getElementById("vehicleGrid");
+const detail=document.getElementById("vehicleDetail");
 
-  output.textContent = "正在取得位置...";
-
-  navigator.geolocation.getCurrentPosition(
-    function(position) {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-      output.innerHTML =
-        "定位成功！<br>" +
-        "緯度：" + lat.toFixed(5) + "<br>" +
-        "經度：" + lon.toFixed(5) +
-        '<br><a target="_blank" href="https://www.google.com/maps?q=' +
-        lat + ',' + lon + '">在 Google 地圖查看</a>';
-    },
-    function() {
-      output.textContent = "無法取得位置，請確認定位權限。";
-    }
-  );
-}
+vehicles.forEach((v,i)=>{
+const card=document.createElement("div");
+card.className="card";
+card.innerHTML=`<div class="number">0${i+1} / REGO</div>
+<div class="symbol">${v.icon}</div>
+<h3>${v.name}</h3><p>${v.desc}</p>`;
+card.addEventListener("click",()=>{
+document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+card.classList.add("active");
+detail.innerHTML=`<div class="eyebrow">VEHICLE 0${i+1}</div>
+<h3>${v.icon} ${v.name}</h3>
+<p>${v.desc}</p>
+<h4>專屬功能</h4>
+<p>${v.features.map(f=>"・"+f).join("<br>")}</p>
+<p class="intro">產品照片與詳細規格將於後續補上。</p>`;
+});
+grid.appendChild(card);
+});
 </script>
-
 </body>
 </html>
