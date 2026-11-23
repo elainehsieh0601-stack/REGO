@@ -434,6 +434,76 @@ section {
   color: #718087;
 }
 
+
+
+/* 新增智慧功能互動區：沿用原本 REGO 配色與卡片風格 */
+.feature-action {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 5px;
+  background: var(--blue);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+.feature-action:hover { background: var(--dark); }
+.feature-panel {
+  display: none;
+  margin-top: 24px;
+  padding: 28px;
+  border: 1px solid #e8edef;
+  border-radius: 12px;
+  background: white;
+}
+.feature-panel.show { display: block; }
+.feature-panel h3 { margin-bottom: 12px; font-size: 25px; }
+.feature-panel p { color: #667780; }
+.feature-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+.feature-controls input {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #d9e1e5;
+  border-radius: 5px;
+  font: inherit;
+}
+.feature-controls button, .story-item {
+  border: 0;
+  border-radius: 5px;
+  padding: 11px 16px;
+  background: var(--blue);
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.feature-controls button.secondary { background: #eaf0f3; color: var(--dark); }
+.map-frame, .spotify-frame {
+  width: 100%;
+  min-height: 340px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--light);
+}
+.spotify-frame { min-height: 180px; }
+.story-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+.story-item { min-height: 90px; text-align: left; background: var(--light); color: var(--dark); border: 1px solid #e8edef; }
+.story-item:hover { border-color: var(--orange); }
+.story-item span { display: block; font-size: 12px; font-weight: 400; color: #718087; margin-top: 5px; }
+.story-status { margin-top: 14px; font-weight: 700; color: var(--blue); }
+@media (max-width: 700px) {
+  .story-list { grid-template-columns: 1fr; }
+  .feature-panel { padding: 20px; }
+  .map-frame { min-height: 280px; }
+}
+
 /* 頁尾 */
 footer {
   padding: 45px 8%;
@@ -685,13 +755,22 @@ footer p {
     <div class="smart-card">
       <div class="smart-icon">📍</div>
       <h3>定位導航</h3>
-      <p>透過定位與導航功能，協助使用者掌握移動方向。</p>
+      <p>透過 Google Maps 定位與導航，協助使用者掌握移動方向。</p>
+      <button class="feature-action" type="button" onclick="showFeature('mapPanel')">開啟地圖</button>
     </div>
 
     <div class="smart-card">
       <div class="smart-icon">🎵</div>
       <h3>音樂娛樂</h3>
-      <p>依照使用情境，提供音樂播放與娛樂體驗。</p>
+      <p>連接 Spotify，享受喜愛的音樂。</p>
+      <button class="feature-action" type="button" onclick="showFeature('spotifyPanel')">開啟 Spotify</button>
+    </div>
+
+    <div class="smart-card">
+      <div class="smart-icon">📖</div>
+      <h3>兒童故事</h3>
+      <p>選擇喜歡的故事，點擊後即可開始語音播放。</p>
+      <button class="feature-action" type="button" onclick="showFeature('storyPanel')">聽故事</button>
     </div>
 
     <div class="smart-card">
@@ -717,6 +796,48 @@ footer p {
       <h3>個人設定</h3>
       <p>依照不同使用者與載具需求調整功能。</p>
     </div>
+  </div>
+
+  <!-- Google Maps：地圖內嵌於 REGO -->
+  <div class="feature-panel" id="mapPanel">
+    <h3>Google Maps 導航</h3>
+    <p>輸入目的地即可在 REGO 中查看地圖；也可以允許定位來查看目前位置。</p>
+    <div class="feature-controls">
+      <input id="mapDestination" type="text" placeholder="輸入目的地，例如：台北車站">
+      <button type="button" onclick="searchMapDestination()">搜尋地點</button>
+      <button type="button" class="secondary" onclick="locateOnMap()">使用目前位置</button>
+      <button type="button" class="secondary" onclick="openGoogleDirections()">開啟路線導航</button>
+    </div>
+    <iframe class="map-frame" id="googleMapFrame" title="Google Maps 地圖" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Taipei&output=embed"></iframe>
+  </div>
+
+  <!-- Spotify：貼上分享連結即可載入官方播放器 -->
+  <div class="feature-panel" id="spotifyPanel">
+    <h3>Spotify 音樂</h3>
+    <p>貼上 Spotify 歌曲、專輯或播放清單的分享連結，即可在 REGO 中播放。部分播放功能可能需要 Spotify 帳戶或 Premium。</p>
+    <div class="feature-controls">
+      <input id="spotifyLink" type="url" placeholder="貼上 Spotify 分享連結">
+      <button type="button" onclick="loadSpotify()">載入播放器</button>
+      <button type="button" class="secondary" onclick="openSpotify()">開啟 Spotify</button>
+    </div>
+    <iframe class="spotify-frame" id="spotifyFrame" title="Spotify 播放器" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" src="about:blank"></iframe>
+  </div>
+
+  <!-- 兒童故事：點選故事後直接語音播放 -->
+  <div class="feature-panel" id="storyPanel">
+    <h3>兒童故事</h3>
+    <p>選擇一個故事，直接開始語音朗讀。</p>
+    <div class="story-list">
+      <button class="story-item" type="button" onclick="playStory('littleStar')">⭐ 小星星找朋友<span>溫暖的小小冒險</span></button>
+      <button class="story-item" type="button" onclick="playStory('braveRabbit')">🐰 勇敢的小兔子<span>學習勇氣與互助</span></button>
+      <button class="story-item" type="button" onclick="playStory('rainbowGarden')">🌈 彩虹花園<span>發現分享的快樂</span></button>
+    </div>
+    <div class="feature-controls">
+      <button type="button" onclick="pauseStory()">暫停</button>
+      <button type="button" class="secondary" onclick="resumeStory()">繼續</button>
+      <button type="button" class="secondary" onclick="stopStory()">停止</button>
+    </div>
+    <div class="story-status" id="storyStatus" aria-live="polite">尚未播放故事</div>
   </div>
 </section>
 
@@ -869,6 +990,100 @@ document.querySelectorAll(".age-card").forEach(button => {
     });
   });
 });
+
+
+// 智慧功能面板：一次只顯示目前選取的功能
+function showFeature(id) {
+  document.querySelectorAll('.feature-panel').forEach(panel => panel.classList.remove('show'));
+  const panel = document.getElementById(id);
+  if (panel) {
+    panel.classList.add('show');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function searchMapDestination() {
+  const destination = document.getElementById('mapDestination').value.trim();
+  if (!destination) { alert('請先輸入目的地'); return; }
+  document.getElementById('googleMapFrame').src = 'https://www.google.com/maps?q=' + encodeURIComponent(destination) + '&output=embed';
+}
+
+let currentMapLocation = null;
+function locateOnMap() {
+  if (!navigator.geolocation) { alert('此瀏覽器不支援定位功能'); return; }
+  navigator.geolocation.getCurrentPosition(position => {
+    currentMapLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
+    document.getElementById('googleMapFrame').src = 'https://www.google.com/maps?q=' + currentMapLocation.lat + ',' + currentMapLocation.lng + '&z=16&output=embed';
+  }, () => alert('無法取得定位，請確認已允許 REGO 使用位置資訊。'), { enableHighAccuracy: true, timeout: 10000 });
+}
+
+function openGoogleDirections() {
+  const destination = document.getElementById('mapDestination').value.trim();
+  if (!destination) { alert('請先輸入目的地'); return; }
+  const origin = currentMapLocation ? currentMapLocation.lat + ',' + currentMapLocation.lng : '';
+  const url = 'https://www.google.com/maps/dir/?api=1' + (origin ? '&origin=' + encodeURIComponent(origin) : '') + '&destination=' + encodeURIComponent(destination);
+  window.open(url, '_blank', 'noopener');
+}
+
+function spotifyEmbedUrl(raw) {
+  try {
+    const url = new URL(raw);
+    if (!['open.spotify.com', 'spotify.link'].includes(url.hostname)) return null;
+    if (url.hostname === 'spotify.link') return null;
+    const parts = url.pathname.split('/').filter(Boolean);
+    const typeIndex = parts.findIndex(part => ['track', 'album', 'playlist', 'episode', 'show'].includes(part));
+    if (typeIndex < 0 || !parts[typeIndex + 1]) return null;
+    return 'https://open.spotify.com/embed/' + parts[typeIndex] + '/' + parts[typeIndex + 1];
+  } catch { return null; }
+}
+function loadSpotify() {
+  const raw = document.getElementById('spotifyLink').value.trim();
+  const embed = spotifyEmbedUrl(raw);
+  if (!embed) { alert('請貼上 open.spotify.com 的歌曲、專輯或播放清單分享連結。'); return; }
+  document.getElementById('spotifyFrame').src = embed;
+}
+function openSpotify() {
+  const raw = document.getElementById('spotifyLink').value.trim();
+  if (raw && /^https:\/\/(open\.spotify\.com|spotify\.link)\//.test(raw)) window.open(raw, '_blank', 'noopener');
+  else window.open('https://open.spotify.com/', '_blank', 'noopener');
+}
+
+// 內建原創短篇故事，使用瀏覽器語音朗讀，不需額外故事網站或音檔。
+const stories = {
+  littleStar: { title: '小星星找朋友', text: '夜空中住著一顆小星星。每天晚上，他都努力發出亮光，卻總覺得自己很孤單。有一天，一朵雲飄過來，問他：你願意陪我照亮回家的路嗎？小星星開心地點點頭。他們一起照亮了森林、河流和小村莊。從那天起，小星星知道了，分享自己的光，就能遇見朋友。' },
+  braveRabbit: { title: '勇敢的小兔子', text: '森林裡住著一隻小兔子。一天，朋友的小球滾到了小溪另一邊。小兔子有點緊張，但他想起朋友需要幫忙，便找來長長的樹枝，和小松鼠一起把球勾了回來。朋友們開心地說謝謝。小兔子發現，勇敢不是什麼都不害怕，而是害怕時，仍願意想辦法幫助別人。' },
+  rainbowGarden: { title: '彩虹花園', text: '小熊在森林裡種了一座花園。花園裡有紅色、黃色和藍色的花，可是小熊覺得還少了些什麼。小兔子帶來種子，小鳥帶來清水，小鹿幫忙鬆土。大家一起照顧花園。雨後，天空出現一道彩虹，花園也開滿了五顏六色的花。小熊明白，大家一起分享和合作，就能創造美好的事情。' }
+};
+function playStory(id) {
+  const story = stories[id];
+  if (!story) return;
+  if (!('speechSynthesis' in window)) { alert('目前瀏覽器不支援語音朗讀'); return; }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(story.text);
+  utterance.lang = 'zh-TW';
+  utterance.rate = 0.9;
+  utterance.onend = () => { document.getElementById('storyStatus').textContent = '播放完成：' + story.title; };
+  utterance.onerror = () => { document.getElementById('storyStatus').textContent = '語音播放暫時無法使用'; };
+  window.speechSynthesis.speak(utterance);
+  document.getElementById('storyStatus').textContent = '正在播放：' + story.title;
+}
+function pauseStory() {
+  if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+    window.speechSynthesis.pause();
+    document.getElementById('storyStatus').textContent = '故事已暫停';
+  }
+}
+function resumeStory() {
+  if ('speechSynthesis' in window && window.speechSynthesis.paused) {
+    window.speechSynthesis.resume();
+    document.getElementById('storyStatus').textContent = '繼續播放故事';
+  }
+}
+function stopStory() {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  document.getElementById('storyStatus').textContent = '故事已停止';
+}
+
 </script>
 
 </body>
