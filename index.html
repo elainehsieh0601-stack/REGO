@@ -501,6 +501,17 @@ section {
 .smart-card { transition: transform .25s, box-shadow .25s; }
 .smart-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px #263B4612; }
 #activityLog li { margin: 7px 0; }
+  .smart-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.smart-link:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px #263B4615;
+}
 @media (max-width: 700px) {
   .story-list { grid-template-columns: 1fr; }
   .feature-panel { padding: 20px; }
@@ -755,19 +766,21 @@ footer p {
   </p>
 
   <div class="smart-grid">
-    <div class="smart-card">
-      <div class="smart-icon">📍</div>
-      <h3>定位導航</h3>
-      <p>透過 Google Maps 定位與導航，協助使用者掌握移動方向。</p>
-      <button class="feature-action" type="button" onclick="showFeature('mapPanel')">開啟地圖</button>
-    </div>
+    <!-- 定位導航 -->
+<a class="smart-card smart-link"
+   href="https://www.google.com/maps">
+  <div class="smart-icon">📍</div>
+  <h3>定位導航</h3>
+  <p>透過 Google Maps 定位與導航，掌握移動方向。</p>
+</a>
 
-    <div class="smart-card">
-      <div class="smart-icon">🎵</div>
-      <h3>音樂娛樂</h3>
-      <p>連接 Spotify，享受喜愛的音樂。</p>
-      <button class="feature-action" type="button" onclick="showFeature('spotifyPanel')">開啟 Spotify</button>
-    </div>
+<!-- 音樂娛樂 -->
+<a class="smart-card smart-link"
+   href="https://open.spotify.com/">
+  <div class="smart-icon">🎵</div>
+  <h3>音樂娛樂</h3>
+  <p>連接 Spotify，享受喜愛的音樂。</p>
+</a>
 
     <div class="smart-card">
       <div class="smart-icon">📖</div>
