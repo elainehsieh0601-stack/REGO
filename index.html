@@ -498,6 +498,9 @@ section {
 .story-item:hover { border-color: var(--orange); }
 .story-item span { display: block; font-size: 12px; font-weight: 400; color: #718087; margin-top: 5px; }
 .story-status { margin-top: 14px; font-weight: 700; color: var(--blue); }
+.smart-card { transition: transform .25s, box-shadow .25s; }
+.smart-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px #263B4612; }
+#activityLog li { margin: 7px 0; }
 @media (max-width: 700px) {
   .story-list { grid-template-columns: 1fr; }
   .feature-panel { padding: 20px; }
@@ -776,25 +779,29 @@ footer p {
     <div class="smart-card">
       <div class="smart-icon">📊</div>
       <h3>活動紀錄</h3>
-      <p>記錄日常使用與移動活動，了解生活歷程。</p>
+      <p>查看本次使用 REGO 的互動紀錄。</p>
+      <button class="feature-action" type="button" onclick="showFeature('activityPanel')">查看紀錄</button>
     </div>
 
     <div class="smart-card">
       <div class="smart-icon">🎮</div>
       <h3>互動遊戲</h3>
-      <p>結合互動體驗，增加使用載具的樂趣。</p>
+      <p>透過簡單的小遊戲增加使用樂趣。</p>
+      <button class="feature-action" type="button" onclick="showFeature('gamePanel')">開始遊戲</button>
     </div>
 
     <div class="smart-card">
       <div class="smart-icon">⌚</div>
       <h3>手錶連動</h3>
-      <p>搭配手機 App，提供快速查看與操作體驗。</p>
+      <p>了解 iPhone 與 Apple Watch 的連動規劃。</p>
+      <button class="feature-action" type="button" onclick="showFeature('watchPanel')">查看功能</button>
     </div>
 
     <div class="smart-card">
       <div class="smart-icon">⚙️</div>
       <h3>個人設定</h3>
-      <p>依照不同使用者與載具需求調整功能。</p>
+      <p>調整 REGO 網頁的基本顯示設定。</p>
+      <button class="feature-action" type="button" onclick="showFeature('settingsPanel')">開啟設定</button>
     </div>
   </div>
 
@@ -838,6 +845,49 @@ footer p {
       <button type="button" class="secondary" onclick="stopStory()">停止</button>
     </div>
     <div class="story-status" id="storyStatus" aria-live="polite">尚未播放故事</div>
+  </div>
+
+
+  <!-- 活動紀錄：此網頁先記錄本次瀏覽器工作階段的操作 -->
+  <div class="feature-panel" id="activityPanel">
+    <h3>活動紀錄</h3>
+    <p>這裡會顯示你在目前這次開啟 REGO 網頁後的操作紀錄。</p>
+    <ul id="activityLog" style="margin:16px 0 16px 22px; color:#667780;"><li>尚無操作紀錄</li></ul>
+    <button class="feature-action" type="button" onclick="clearActivityLog()">清除紀錄</button>
+  </div>
+
+  <!-- 互動遊戲：簡單的 REGO 知識問答 -->
+  <div class="feature-panel" id="gamePanel">
+    <h3>REGO 小挑戰</h3>
+    <p id="gameQuestion">REGO 的設計核心是什麼？</p>
+    <div class="feature-controls" id="gameAnswers">
+      <button type="button" onclick="answerGame(false)">單一固定用途</button>
+      <button type="button" class="secondary" onclick="answerGame(true)">共用骨架、轉換不同載具</button>
+    </div>
+    <div class="story-status" id="gameStatus" aria-live="polite">選擇一個答案試試看！</div>
+    <button class="feature-action" type="button" onclick="resetGame()">再玩一次</button>
+  </div>
+
+  <!-- Apple Watch：展示連動規劃；真正同步需原生 App -->
+  <div class="feature-panel" id="watchPanel">
+    <h3>Apple Watch 連動</h3>
+    <p>REGO 預計透過 iPhone App 與 Apple Watch 同步。手錶可規劃快速查看導航方向、控制音樂及接收提醒。</p>
+    <div class="detail-features">
+      <span>快速查看導航</span><span>音樂播放控制</span><span>活動資訊</span><span>通知提醒</span>
+    </div>
+    <p style="margin-top:16px;">目前這個版本是網站展示介面，尚未連接實際 Apple Watch。正式連動需要另外開發 iPhone 與 watchOS App。</p>
+  </div>
+
+  <!-- 個人設定：提供網頁顯示選項 -->
+  <div class="feature-panel" id="settingsPanel">
+    <h3>個人設定</h3>
+    <p>調整此網頁的閱讀顯示方式。</p>
+    <div class="feature-controls">
+      <button type="button" onclick="changeTextSize(1)">放大文字</button>
+      <button type="button" class="secondary" onclick="changeTextSize(-1)">縮小文字</button>
+      <button type="button" class="secondary" onclick="resetTextSize()">恢復預設</button>
+    </div>
+    <div class="story-status" id="settingsStatus" aria-live="polite">目前為預設文字大小</div>
   </div>
 </section>
 
@@ -993,11 +1043,30 @@ document.querySelectorAll(".age-card").forEach(button => {
 
 
 // 智慧功能面板：一次只顯示目前選取的功能
+const activityEntries = [];
+function addActivity(message) {
+  const time = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+  activityEntries.unshift(time + '　' + message);
+  renderActivityLog();
+}
+function renderActivityLog() {
+  const list = document.getElementById('activityLog');
+  if (!list) return;
+  list.innerHTML = activityEntries.length
+    ? activityEntries.map(entry => `<li>${entry}</li>`).join('')
+    : '<li>尚無操作紀錄</li>';
+}
+function clearActivityLog() {
+  activityEntries.length = 0;
+  renderActivityLog();
+}
 function showFeature(id) {
   document.querySelectorAll('.feature-panel').forEach(panel => panel.classList.remove('show'));
   const panel = document.getElementById(id);
   if (panel) {
     panel.classList.add('show');
+    const labels = { mapPanel: '開啟定位導航', spotifyPanel: '開啟音樂娛樂', storyPanel: '開啟兒童故事', activityPanel: '查看活動紀錄', gamePanel: '開啟互動遊戲', watchPanel: '查看手錶連動', settingsPanel: '開啟個人設定' };
+    addActivity(labels[id] || '開啟功能');
     panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 }
@@ -1006,6 +1075,7 @@ function searchMapDestination() {
   const destination = document.getElementById('mapDestination').value.trim();
   if (!destination) { alert('請先輸入目的地'); return; }
   document.getElementById('googleMapFrame').src = 'https://www.google.com/maps?q=' + encodeURIComponent(destination) + '&output=embed';
+  addActivity('搜尋地點：' + destination);
 }
 
 let currentMapLocation = null;
@@ -1014,6 +1084,7 @@ function locateOnMap() {
   navigator.geolocation.getCurrentPosition(position => {
     currentMapLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
     document.getElementById('googleMapFrame').src = 'https://www.google.com/maps?q=' + currentMapLocation.lat + ',' + currentMapLocation.lng + '&z=16&output=embed';
+    addActivity('取得目前位置');
   }, () => alert('無法取得定位，請確認已允許 REGO 使用位置資訊。'), { enableHighAccuracy: true, timeout: 10000 });
 }
 
@@ -1023,6 +1094,7 @@ function openGoogleDirections() {
   const origin = currentMapLocation ? currentMapLocation.lat + ',' + currentMapLocation.lng : '';
   const url = 'https://www.google.com/maps/dir/?api=1' + (origin ? '&origin=' + encodeURIComponent(origin) : '') + '&destination=' + encodeURIComponent(destination);
   window.open(url, '_blank', 'noopener');
+  addActivity('開啟 Google Maps 路線導航：' + destination);
 }
 
 function spotifyEmbedUrl(raw) {
@@ -1041,6 +1113,7 @@ function loadSpotify() {
   const embed = spotifyEmbedUrl(raw);
   if (!embed) { alert('請貼上 open.spotify.com 的歌曲、專輯或播放清單分享連結。'); return; }
   document.getElementById('spotifyFrame').src = embed;
+  addActivity('載入 Spotify 播放器');
 }
 function openSpotify() {
   const raw = document.getElementById('spotifyLink').value.trim();
@@ -1065,6 +1138,7 @@ function playStory(id) {
   utterance.onend = () => { document.getElementById('storyStatus').textContent = '播放完成：' + story.title; };
   utterance.onerror = () => { document.getElementById('storyStatus').textContent = '語音播放暫時無法使用'; };
   window.speechSynthesis.speak(utterance);
+  addActivity('播放兒童故事：' + story.title);
   document.getElementById('storyStatus').textContent = '正在播放：' + story.title;
 }
 function pauseStory() {
@@ -1082,6 +1156,30 @@ function resumeStory() {
 function stopStory() {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   document.getElementById('storyStatus').textContent = '故事已停止';
+}
+
+function answerGame(correct) {
+  const status = document.getElementById('gameStatus');
+  if (correct) {
+    status.textContent = '答對了！REGO 透過共用骨架轉換不同載具。';
+    addActivity('完成 REGO 小挑戰');
+  } else {
+    status.textContent = '再想想看：REGO 的特色是讓同一套骨架轉換不同形式。';
+  }
+}
+function resetGame() {
+  document.getElementById('gameStatus').textContent = '選擇一個答案試試看！';
+}
+let textScale = 1;
+function changeTextSize(direction) {
+  textScale = Math.max(0.9, Math.min(1.2, textScale + direction * 0.05));
+  document.documentElement.style.fontSize = (16 * textScale) + 'px';
+  document.getElementById('settingsStatus').textContent = '目前文字大小：' + Math.round(textScale * 100) + '%';
+}
+function resetTextSize() {
+  textScale = 1;
+  document.documentElement.style.fontSize = '';
+  document.getElementById('settingsStatus').textContent = '已恢復預設文字大小';
 }
 
 </script>
