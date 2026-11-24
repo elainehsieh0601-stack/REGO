@@ -325,19 +325,19 @@ section {
   transform: translateY(-5px);
   
 /* REGO 長者購物清單 */
-.shopping-list-panel {
+.const shoppingStorageKey = "regoShoppingList"; {
   margin-top: 30px;
   padding: 25px;
   background: #F4F7F8;
   border-radius: 12px;
 }
 
-.shopping-list-panel h4 {
+.id="shoppingListPanel" h4 {
   font-size: 25px;
   margin-bottom: 8px;
 }
 
-.shopping-list-panel p {
+.id="shoppingListPanel" p {
   color: #667780;
   margin-bottom: 18px;
 }
@@ -873,23 +873,35 @@ footer p {
       <p id="detailDesc"></p>
       <div class="detail-features" id="detailFeatures"></div>
     
-    <div class="shopping-list-panel" id="shoppingListPanel" hidden>
-  <h4>🛒 我的購物清單</h4>
-  <p>出門採買前，先整理今天需要購買的物品。</p>
-  <div class="shopping-form">
-    <input type="text" id="shoppingProduct" placeholder="輸入商品名稱，例如：青菜">
-    <input type="number" id="shoppingQuantity" min="1" value="1" aria-label="購買數量">
-    <select id="shoppingCategory">
-      <option value="蔬菜水果">蔬菜水果</option>
-      <option value="食品">食品</option>
-      <option value="飲品">飲品</option>
-      <option value="日用品">日用品</option>
-      <option value="其他">其他</option>
-    </select>
+    <div class="id="shoppingListPanel"" id="shoppingListPanel" hidden>
+  <div class="rego-shopping">
+    <h2>🛒 我的購物清單</h2>
+    <p>點選商品即可快速加入</p>
+
+    <div class="quick-products">
+      <button onclick="addProduct('青菜')">🥬<br>青菜</button>
+      <button onclick="addProduct('紅蘿蔔')">🥕<br>紅蘿蔔</button>
+      <button onclick="addProduct('番茄')">🍅<br>番茄</button>
+      <button onclick="addProduct('雞蛋')">🥚<br>雞蛋</button>
+      <button onclick="addProduct('牛奶')">🥛<br>牛奶</button>
+      <button onclick="addProduct('蘋果')">🍎<br>蘋果</button>
+      <button onclick="addProduct('香蕉')">🍌<br>香蕉</button>
+      <button onclick="addProduct('衛生紙')">🧻<br>衛生紙</button>
+    </div>
+
+    <div class="shopping-input">
+      <input id="newProduct" placeholder="輸入商品名稱">
+      <button onclick="addManualProduct()">＋ 新增</button>
+    </div>
+
+    <button class="voice-button" onclick="startVoice()">
+      🎤 語音新增商品
+    </button>
+
+    <p id="voiceStatus">點擊麥克風開始說話</p>
+    <h3>採買清單</h3>
+    <div id="shoppingItems"></div>
   </div>
-  <button class="shopping-add" id="addShoppingProduct">＋ 新增商品</button>
-  <div class="shopping-progress" id="shoppingProgress">已完成 0 項</div>
-  <div class="shopping-list" id="shoppingList"></div>
 </div>
   </div>
 </section>
