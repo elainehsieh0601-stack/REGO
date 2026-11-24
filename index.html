@@ -323,6 +323,114 @@ section {
 .vehicle-card:hover,
 .vehicle-card.active {
   transform: translateY(-5px);
+  
+/* REGO 長者購物清單 */
+.shopping-list-panel {
+  margin-top: 30px;
+  padding: 25px;
+  background: #F4F7F8;
+  border-radius: 12px;
+}
+
+.shopping-list-panel h4 {
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+
+.shopping-list-panel p {
+  color: #667780;
+  margin-bottom: 18px;
+}
+
+.shopping-form {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.shopping-form input,
+.shopping-form select {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px;
+  border: 1px solid #ccd5d9;
+  border-radius: 7px;
+  font-size: 16px;
+  background: white;
+}
+
+.shopping-add {
+  width: 100%;
+  min-height: 50px;
+  border: none;
+  border-radius: 7px;
+  background: #1769AA;
+  color: white;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.shopping-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.shopping-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  font-size: 17px;
+}
+
+.shopping-item input {
+  width: 23px;
+  height: 23px;
+  accent-color: #39945B;
+}
+
+.shopping-item-info {
+  flex: 1;
+}
+
+.shopping-item-info small {
+  display: block;
+  color: #718087;
+  font-size: 13px;
+}
+
+.shopping-item.done .shopping-item-name {
+  text-decoration: line-through;
+  color: #89969c;
+}
+
+.shopping-delete {
+  border: none;
+  background: #FCE9E9;
+  color: #B83B3B;
+  padding: 9px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.shopping-progress {
+  font-size: 15px;
+  color: #39945B;
+  font-weight: 700;
+  margin-top: 15px;
+}
+
+@media (max-width: 600px) {
+  .shopping-form {
+    grid-template-columns: 1fr;
+  }
+}
+
   border-color: var(--orange);
   box-shadow: 0 12px 28px #263B4615;
 }
@@ -764,7 +872,25 @@ footer p {
       <h3 id="detailName"></h3>
       <p id="detailDesc"></p>
       <div class="detail-features" id="detailFeatures"></div>
-    </div>
+    
+    <div class="shopping-list-panel" id="shoppingListPanel" hidden>
+  <h4>🛒 我的購物清單</h4>
+  <p>出門採買前，先整理今天需要購買的物品。</p>
+  <div class="shopping-form">
+    <input type="text" id="shoppingProduct" placeholder="輸入商品名稱，例如：青菜">
+    <input type="number" id="shoppingQuantity" min="1" value="1" aria-label="購買數量">
+    <select id="shoppingCategory">
+      <option value="蔬菜水果">蔬菜水果</option>
+      <option value="食品">食品</option>
+      <option value="飲品">飲品</option>
+      <option value="日用品">日用品</option>
+      <option value="其他">其他</option>
+    </select>
+  </div>
+  <button class="shopping-add" id="addShoppingProduct">＋ 新增商品</button>
+  <div class="shopping-progress" id="shoppingProgress">已完成 0 項</div>
+  <div class="shopping-list" id="shoppingList"></div>
+</div>
   </div>
 </section>
 
@@ -1003,7 +1129,101 @@ const ageNames = {
 
 const grid = document.getElementById("vehicleGrid");
 const detail = document.getElementById("vehicleDetail");
+const shoppingStorageKey = "regoShoppingList";
+let shoppingItems = [];
 
+try {
+  shoppingItems = JSON.parse(localStorage.getItem(shoppingStorageKey) || "[]");
+  if (!Array.isArray(shoppingItems)) shoppingItems = [];
+} catch (error) {
+  shoppingItems = [];
+}
+
+function saveShoppingItems() {
+  localStorage.setItem(shoppingStorageKey, JSON.stringify(shoppingItems));
+}
+
+function renderShoppingList() {
+  const list = document.getElementById("shoppingList");
+  const progress = document.getElementById("shoppingProgress");
+  if (!list || !progress) return;
+
+  list.innerHTML = "";
+  const completed = shoppingItems.filter(item => item.done).length;
+  progress.textContent = `已完成 ${completed} 項／共 ${shoppingItems.length} 項`;
+
+  shoppingItems.forEach(item => {
+    const row = document.createElement("div");
+    row.className = "shopping-item" + (item.done ? " done" : "");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = item.done;
+    checkbox.addEventListener("change", () => {
+      item.done = checkbox.checked;
+      saveShoppingItems();
+      renderShoppingList();
+    });
+
+    const info = document.createElement("div");
+    info.className = "shopping-item-info";
+
+    const name = document.createElement("span");
+    name.className = "shopping-item-name";
+    name.textContent = item.name;
+
+    const detail = document.createElement("small");
+    detail.textContent = `${item.category}・數量 ${item.quantity}`;
+    info.append(name, detail);
+
+    const remove = document.createElement("button");
+    remove.className = "shopping-delete";
+    remove.textContent = "刪除";
+    remove.addEventListener("click", () => {
+      shoppingItems = shoppingItems.filter(product => product.id !== item.id);
+      saveShoppingItems();
+      renderShoppingList();
+    });
+
+    row.append(checkbox, info, remove);
+    list.appendChild(row);
+  });
+}
+
+document.getElementById("addShoppingProduct").addEventListener("click", () => {
+  const nameInput = document.getElementById("shoppingProduct");
+  const quantityInput = document.getElementById("shoppingQuantity");
+  const categoryInput = document.getElementById("shoppingCategory");
+
+  const name = nameInput.value.trim();
+  const quantity = Math.max(1, parseInt(quantityInput.value, 10) || 1);
+
+  if (!name) {
+    alert("請先輸入商品名稱！");
+    nameInput.focus();
+    return;
+  }
+
+  shoppingItems.push({
+    id: Date.now() + Math.random(),
+    name,
+    quantity,
+    category: categoryInput.value,
+    done: false
+  });
+
+  saveShoppingItems();
+  renderShoppingList();
+  nameInput.value = "";
+  quantityInput.value = "1";
+  nameInput.focus();
+});
+
+document.getElementById("shoppingProduct").addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    document.getElementById("addShoppingProduct").click();
+  }
+});
 document.querySelectorAll(".age-card").forEach(button => {
   button.addEventListener("click", () => {
     const age = button.dataset.age;
@@ -1057,7 +1277,13 @@ document.querySelectorAll(".age-card").forEach(button => {
           ).join("");
 
         detail.classList.add("show");
-      });
+      const shoppingPanel = document.getElementById("shoppingListPanel");
+
+shoppingPanel.hidden = item.id !== "07";
+
+if (item.id === "07") {
+  renderShoppingList();
+}
     });
 
     document.getElementById("vehicleArea").scrollIntoView({
